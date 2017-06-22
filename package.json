@@ -1,0 +1,30 @@
+{
+  "name": "easydemo",
+  "version": "1.0.0",
+  "description": "just work pls",
+  "main": "serve.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "girl",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.4.1",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.17.2",
+    "crypto": "0.0.3",
+    "express": "^4.15.3",
+    "jsonwebtoken": "^7.4.1",
+    "mongodb": "^2.2.28",
+    "mongoose": "^4.10.5",
+    "morgan": "^1.8.2",
+    "nodemailer": "^4.0.1",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
+    "passport-google-oauth": "^1.0.0",
+    "passport-local": "^1.0.0",
+    "password-reset": "^0.1.4",
+    "rand-token": "^0.3.0",
+    "sendgrid": "^5.1.1"
+  }
+}
