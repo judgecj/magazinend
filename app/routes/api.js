@@ -1,5 +1,5 @@
    var User = require('../models/user.js');
-   var f_g_User = require('../models/user.js'); 
+   var f_g_User = require('../models/facebook-google.js'); 
    var config  = require('../../config');
    var passport = require('passport');
    var LocalStrategy = require('passport-local').Strategy;
@@ -138,7 +138,7 @@ module.exports = function(app , express) {
       api.get('/auth/facebook/callback',  function(req, res, next){
             passport.authenticate('facebook',  function(err, user, info){ 
             if(err){
-                        next(err);
+                 next(err);
                     } else if(!user){
                         res.json({"status": "error", "message": info });
                     } else {
