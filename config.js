@@ -1,6 +1,6 @@
 module.exports = {
 	"database:":"mongodb://judgechuks:chuks@ds051655.mlab.com:51655/userme",
-	"port": process.env.PORT || 3000,
+	"port": process.env.PORT || 4000,
 	"secretKey" : "YourSecretKey",
 	'facebookAuth' : {
         'clientID'      : '465510780492529', // your App ID

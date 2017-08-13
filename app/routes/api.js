@@ -48,25 +48,7 @@ module.exports = function(app , express) {
        })
   });
 
- /// all User 
-        api.post('/login', function(req, res, next) {
-                passport.authenticate('local', function(err, user, info){
-                    if(err){
-                        next(err);
-                    } else if(!user){
-                        res.json({"status": "error", "message": info });
-                    } else {
-                        var token =  createToken(user);
-                        res.json({
-                        status :"true",
-                        message :"seccess loging",
-                        "data": user ,
-                        token : token
-                    })
-                    }
-                })(req, res, next);
-                                                    
-        }); 
+
    // router facebok 
     
   
@@ -153,32 +135,53 @@ module.exports = function(app , express) {
                 })(req, res, next);
       });
       
-   // google router 
+   
 
    
-             
+      /// all User 
+        api.post('/login', function(req, res, next) {
+                 passport.authenticate('local', function(err, user, info){
+                    if(err){
+                        next(err);
+                    } else if(!user){
+                      
+                        res.json({"status": "error", "message": info });
+                    } else {
+                        
+                        var token =  createToken(user);
+                        res.json({
+                        status :"true",
+                        message :"seccess loging",
+                        "data": user ,
+                        token : token
+                    })
+                    }
+                })(req, res, next);
+                                                    
+        });         
    
 
    //sign sign in
-     passport.use(new LocalStrategy({
+   passport.use(new LocalStrategy({
          passReqToCallback : true,
            session: true,
         emailField: 'email',
         passwordField: 'password'
+        
             },
-            function(req, email, password, done) {
+            function(req, username, password, done) {
                 var unhashedPassword = password;
-                var passedEmail = emails;
-
-                 User.findOne({ username: passedUsername }).select('password').exec(function (err, user)  {
+                var passedEmail = username;
+           console.log("dhfgbabuierofbj")
+                 User.findOne({ email: passedEmail }).select('password').exec(function (err, user)  {
                      if (err) {
                           console.log('Error:', err);
                           return done(err); 
                         }
                      console.log('within local strategy', user);
                         if (!user) {
-                                console.log('Incorrect username:');
-                                return done(null, false, { message: 'Incorrect username.' });
+                                console.log('Incorrect email:');
+                                return done(null, false, { message: 'Incorrect email.' });
                          }
                        console.log("userpass", unhashedPassword);   
                     bcrypt.compare(password, user.password, function (err, response) {
