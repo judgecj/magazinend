@@ -5,11 +5,34 @@
  var MongoClient = require('mongodb').MongoClient;
  var config = require('./config');
  var body = require('body-parser');
-  
+ const cors = require('cors');
+  const helmet = require('helmet');
+
+  var http = require('http');
   app = express();
-  app.use(body.urlencoded({extended:true}));
-  app.use(body.json());
- 
+  app.use(function(req, res, next) { //allow cross origin requests
+    res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
+    res.header("Access-Control-Allow-Origin", "http://localhost:4000");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+});
+
+  //   http.createServer(function (request, response) {
+  //   response.writeHead(200, {
+  //       'Content-Type': 'text/plain',
+  //       'Access-Control-Allow-Origin' : '*',
+  //       'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+  //       'Content-Type': 'application/json',
+  //           'Access-Control-Allow-Origin': '*'
+  //   });
+  // });
+    app.use(cors());
+    app.use(helmet());
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+
 
   //  view e
   app.use(morgan('dev')) ;

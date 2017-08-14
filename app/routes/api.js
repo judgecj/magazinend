@@ -140,6 +140,7 @@ module.exports = function(app , express) {
    
       /// all User 
         api.post('/login', function(req, res, next) {
+          console.log("api", req.body.username, req.body.password)
                  passport.authenticate('local', function(err, user, info){
                     if(err){
                         next(err);
@@ -172,7 +173,7 @@ module.exports = function(app , express) {
             function(req, username, password, done) {
                 var unhashedPassword = password;
                 var passedEmail = username;
-           console.log("dhfgbabuierofbj")
+           
                  User.findOne({ email: passedEmail }).select('password').exec(function (err, user)  {
                      if (err) {
                           console.log('Error:', err);
