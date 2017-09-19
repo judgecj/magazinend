@@ -1,5 +1,5 @@
 module.exports = {
-	"database:":"mongodb://judgechuks:chuks@ds051655.mlab.com:51655/userme",
+	"database:":"mongodb://judgechuks:chukwuka@ds141264.mlab.com:41264/stylzmax",
 	"port": process.env.PORT || 4000,
 	"secretKey" : "YourSecretKey",
 	'facebookAuth' : {

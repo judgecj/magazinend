@@ -63,10 +63,10 @@
         });
    }
 
-var url = 'mongodb://judgechuks:chuks@ds051655.mlab.com:51655/userme';
+var url = 'mongodb://judgechuks:chukwuka@ds141264.mlab.com:41264/stylzmax';
 
   // db connect
-mongose.connect('mongodb://judgechuks:chuks@ds051655.mlab.com:51655/userme');
+mongose.connect('mongodb://judgechuks:chukwuka@ds141264.mlab.com:41264/stylzmax');
 var conn = mongose.connection;
 conn.on('error', console.error.bind(console, 'connection error:'));
 
