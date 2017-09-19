@@ -1,4 +1,5 @@
    var User = require('../models/user.js');
+   var Post = require('../models/post.js');
    var f_g_User = require('../models/facebook-google.js'); 
    var config  = require('../../config');
    var passport = require('passport');
@@ -11,19 +12,30 @@
    var async = require('async');
    var nodemailer = require('nodemailer');
    var crypto = require('crypto');
-    var helper = require('sendgrid').mail;
-    var randtoken = require('rand-token');
- function createToken(user) {
-	var token  = jsonwebtoken.sign({
-		_id:  user._id,
-		name: user.name,
-		username : user.username
+  var helper = require('sendgrid').mail;
+  var randtoken = require('rand-token');
+   var cloudinary = require('cloudinary');
+   var multer = require('multer');
+   var DIR = './uploads/';
+//define the type of upload multer would be doing and pass in its destination, in our case, its a single file with the name photo
+  var upload = multer({dest: DIR}).single('photo');
+  cloudinary.config({
+    cloud_name: 'stylzmax',
+    api_key: '919349368563551',
+    api_secret: 'VjVdIEWNAX4XlXL6L7zruR_-8us'
+   });
+     function createToken(user) {
+    	var token  = jsonwebtoken.sign({
+    		_id:  user._id,
+    		username : user.username,
+        email : user.email
+    	   },key,{
+    	    expiresIn: 30000
+    	  })
+    	return token
+       }
 
-	},key,{
-	 expiresIn: 30000
-	})
-	return token
-   }
+
 
 module.exports = function(app , express) {
 
@@ -32,8 +44,7 @@ module.exports = function(app , express) {
   /// Sign up
   api.post("/signup", function(req, res){
         var user = new User ({
-      	   name: req.body.name,
-   	       username: req.body.username,
+      	   username: req.body.username,
            email: req.body.email,
    	       password: req.body.password,
         });
@@ -49,9 +60,60 @@ module.exports = function(app , express) {
   });
 
 
+
+    api.post('/upload', function (req, res, next) {
+
+        var path = '';
+          upload(req, res, function (err) {
+            if (err) {
+                // An error occurred when uploading
+                console.log(err);
+                return res.status(422).send("an Error occured")
+            }
+        //     // No error occured.
+            console.log("JHDFKUYSJF",path = req.file.path);
+            cloudinary.uploader.upload(path, function(result, req) {
+                
+               return res.json({"result":result.url});   
+            });
+         
+            
+        });
+    });
+     
+      api.get('/posts',function(req,res, next) {
+         Post.find({}, function(err, posts) {
+                if(err){
+                    res.send(err);
+                }
+                res.json(posts);    // body...
+            });
+      });
+
+
+
+      api.post('/uploads', function (req, res, next) {
+           var d =  new Date()
+            console.log("date" ,d)
+            var post = new  Post({
+                body: req.body.body,
+                title: req.body.title,
+                name: req.body.name,
+                url:   req.body.url,
+               created_at: d
+            });
+            post.save(function(err){
+            console.log("user...", post);
+            if(err){
+                res.send(err);
+                 return;
+            }
+            res.json({"massage" : "User has been created"});
+          })
+      });
    // router facebok 
     
-  
+
     
 
     passport.use(new FacebookStrategy({
@@ -446,11 +508,42 @@ module.exports = function(app , express) {
         });
 
 
+         // api.router('/')
+
+         //       .post(function(res, req){
+         //             var post = new Post({
+         //                user_id : req.decoded.id,
+         //                body : req.body.body,
+         //                title : req.body.title,
+         //                name : req.body.name
+
+         //             });
+
+         //             Post.save(function(err){
+         //                 if(err){
+         //                  res.send(err);
+         //                  return
+         //                 }
+         //                 res.json({message : "post created"})
+         //             });
+         //       })
+
+               
+         //       .get(function(req,res){
+         //           Post.find({user_id : req.decoded.id}, function(err, posts){
+         //            if(err){
+         //                res.send(err);
+         //                return;
+         //               }
+         //               res.json(posts);
+         //           })
+         //       })
+
             api.get("/", function(req , res) {
               res.json("welcome");
             })
 
-
+        
 
   return api    
 

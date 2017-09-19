@@ -3,7 +3,7 @@
   var  Schema = mongose.Schema;
  var bcrypt = require('bcrypt-nodejs');
   var UserSchema =  new Schema({
-            name: String,
+            
             resetPasswordToken: String,
             resetPasswordExpires : String,
             email:{type:String, unique:true, index:{unique :true}},
