@@ -1,7 +1,7 @@
  var mongose = require('mongoose');
 
   var  Schema = mongose.Schema;
- var bcrypt = require('bcrypt-nodejs');
+  var bcrypt = require('bcrypt-nodejs');
   var UserSchema =  new Schema({
             
             resetPasswordToken: String,

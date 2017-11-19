@@ -10,6 +10,7 @@
              name :String,
              image :String,
              url:String,
+             category_id:{type:String, required:true},
              created_at: String
   
           

@@ -41,8 +41,15 @@
   //  view e
   app.use(morgan('dev')) ;
   var api = require('./app/routes/api')(app, express);
+  var post_api = require('./app/routes/post_api')(app, express);
+  var category_api = require('./app/routes/category_api')(app, express);
+  var user_api= require('./app/routes/user_api')(app, express);
   app.use('/api', api);
-   
+  app.use('/posts', post_api);
+  app.use('/categories', category_api)
+  app.use('/users', user_api)
+
+
   // time for emoving file  
   var timer = every(1, 'day', function() {
     console.log(this.duration);
@@ -80,7 +87,7 @@ conn.on('error', console.error.bind(console, 'connection error:'));
  	if(err){
  		console.log(err);
  	}else{
- 		console.log("post 3000 loading .........", config.port)
+ 		console.log("serve is runing on port 4000 loading .........", config.port)
  	}
 
  })

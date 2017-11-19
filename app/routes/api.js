@@ -1,4 +1,5 @@
    var User = require('../models/user.js');
+   var Category = require('../models/category.js');
    var Post = require('../models/post.js');
    var f_g_User = require('../models/facebook-google.js'); 
    var config  = require('../../config');
@@ -8,12 +9,12 @@
    var jsonwebtoken = require('jsonwebtoken');
    var bcrypt = require('bcrypt-nodejs');
    var FacebookStrategy = require('passport-facebook').Strategy;
-  var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+   var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
    var async = require('async');
    var nodemailer = require('nodemailer');
    var crypto = require('crypto');
-  var helper = require('sendgrid').mail;
-  var randtoken = require('rand-token');
+   var helper = require('sendgrid').mail;
+   var randtoken = require('rand-token');
    var cloudinary = require('cloudinary');
    var multer = require('multer');
    var DIR = './uploads/';
@@ -81,16 +82,24 @@ module.exports = function(app , express) {
         });
     });
      
-      api.get('/posts',function(req,res, next) {
-         Post.find({}, function(err, posts) {
+    
+     api.post('/category_new', function(req, res, next){
+           console.log(req.body.name)
+           var d =  new Date()
+            category = new Category({
+                 name: req.body.name,
+                 created_at: d
+            })
+            category.save(function(err){
+                console.log("user...", category);
                 if(err){
                     res.send(err);
+                     return;
                 }
-                res.json(posts);    // body...
-            });
-      });
+                res.json({"massage" : "Category has been created"});
+              })
 
-
+     })
 
       api.post('/uploads', function (req, res, next) {
            var d =  new Date()
@@ -99,6 +108,7 @@ module.exports = function(app , express) {
                 body: req.body.body,
                 title: req.body.title,
                 name: req.body.name,
+                category_id: req.body.category,
                 url:   req.body.url,
                created_at: d
             });
@@ -108,9 +118,58 @@ module.exports = function(app , express) {
                 res.send(err);
                  return;
             }
-            res.json({"massage" : "User has been created"});
+            res.json({"massage" : "Post has been created"});
           })
       });
+
+    //get post
+
+     api.get('/posts',function(req,res, next) {
+         Post.find({}, function(err, posts) {
+                if(err){
+                    res.send(err);
+                }
+                res.json(posts);    // body...
+            });
+      });
+
+
+ 
+
+/// categories  url
+
+    api.get('/categories', function(req, res, next){
+        Category.find({}, function(err, category) {
+            if(err){
+                res.send(err);
+            }
+            res.json(category);    // body...
+        });
+    }) 
+    
+ /// category id params
+ 
+  api.get('/category/:id', function(req, res, next){
+       var id = req.params.id;
+       Post.find({ category_id: req.params.id }, function(err, post) {
+        if (!post) {
+          console.log('error', 'Password reset token is invalid or has expired.');
+         };
+          console.log(post)
+          res.json(post);
+        })
+  })
+      
+  ///  qurrey category 
+
+
+  api.get('/category', function(req, res){
+    
+    const judge = req.query.name;
+    console.log( judge)
+
+   })
+
    // router facebok 
     
 
@@ -224,6 +283,8 @@ module.exports = function(app , express) {
         });         
    
 
+
+
    //sign sign in
    passport.use(new LocalStrategy({
          passReqToCallback : true,
@@ -271,6 +332,8 @@ module.exports = function(app , express) {
                }
             ));
             
+
+
 
 
      api.get('/auth/google', passport.authenticate('google', { scope: 	['profile', 'email']  }));
@@ -339,6 +402,7 @@ module.exports = function(app , express) {
             
            });
       })
+
 
         api.post('/passwordset',  function(req, res){
           User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() }, function(err , user) {
@@ -483,12 +547,12 @@ module.exports = function(app , express) {
             if(token){
                     jsonwebtoken.verify(token, key, function(err , decoded){
             if(err){
-            res.status(403).send({seccess:false, message:"false"});
-             }else{
-             req.decoded = decoded;
-             next();
-             }
-           });
+                    res.status(403).send({seccess:false, message:"false"});
+                    }else{
+                    req.decoded = decoded;
+                    next();
+                    }
+               });
           }else{
             res.status(403).send({seccess:false, message:"false"});
         }
