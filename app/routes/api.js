@@ -541,6 +541,7 @@ module.exports = function(app , express) {
                //      var user = this;
           ///    return  bcrypt.compareSync(password, user.password);
         // }
+         ////////// love my code 
            
     api.use(function(req, res, next){
         var token =  req.body.token || req.param("token")  || req.headers["x-access-token"];
